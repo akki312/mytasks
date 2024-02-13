@@ -1,3 +1,3 @@
 const numbers = [2, 5, 9, 2];
 console.log(numbers.lastIndexOf(2)); 
-output:3
+/**output:3*/

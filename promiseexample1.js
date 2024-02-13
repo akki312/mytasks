@@ -19,4 +19,4 @@ async function asyncFunc() {
 
 // calling the async function
 asyncFunc(); // Promise resolved
-output:promise resolved
+/**output:promise resolved*/

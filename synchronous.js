@@ -8,5 +8,5 @@ function addSync(a, b) {
   const result = addSync(1, 2);
   console.log("After addition:", result);
 
-before addition: 1,2
-after addition:3
+/**before addition: 1,2
+after addition:3*/

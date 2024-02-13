@@ -11,6 +11,6 @@ function addAsync(a, b, callback) {
   addAsync(2, 1, (result) => {
     console.log("After addition:", result);
   });
-output:
+/**output:
   before addition 2, 1
-after addition 3
+after addition 3*/

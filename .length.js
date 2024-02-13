@@ -1,3 +1,3 @@
 const array = [1, 2, 3];
 console.log(array.length); 
-output:3
+/**output:3*/
