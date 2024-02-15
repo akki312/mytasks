@@ -1,4 +1,5 @@
-// Asynchronous function
+/**  Asynchronous function:An asynchronous function in JavaScript is a function that operates asynchronously, 
+meaning it doesn't block the execution of the code.*/
 function addAsync(a, b, callback) {
     setTimeout(() => {
       const result = a + b;
