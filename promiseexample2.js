@@ -1,3 +1,5 @@
+/**promise function:Promises in JavaScript are a way to handle asynchronous operations. 
+ * They represent a value that may be available now, or in the future, or never. */
 const count = true;
 let countValue = new Promise(function (resolve, reject){
     if (count) {

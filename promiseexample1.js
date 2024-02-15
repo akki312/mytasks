@@ -1,3 +1,5 @@
+/**promise function:Promises in JavaScript are a way to handle asynchronous operations. 
+ * They represent a value that may be available now, or in the future, or never. */
 // a promise
 let promise = new Promise(function (resolve, reject) {
     setTimeout(function () {
