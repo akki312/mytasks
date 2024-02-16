@@ -1,4 +1,5 @@
-// Synchronous function
+/**  Synchronous function:A synchronous function in JavaScript is a function that executes sequentially, 
+ * blocking further execution of code until it completes its task*/
 function addSync(a, b) {
     return a + b;
   }
