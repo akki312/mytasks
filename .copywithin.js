@@ -1,3 +1,6 @@
+/**.copyWithin() call rotates the array to the left by 3 positions. 
+ * This is achieved by copying elements starting 
+ * from index 3 and pasting them starting from index 0. */
 const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Suppose we want to:
