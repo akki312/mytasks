@@ -1,3 +1,6 @@
+/**find index: this function will find the index of the given number 
+ * in the string or the array and will display the ouput
+ */
 const numbers = [5, 10, 15, 20];
 const index = numbers.findIndex(num => num === 15);
 console.log(index); 
