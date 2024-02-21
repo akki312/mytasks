@@ -1,6 +1,8 @@
 /**The .splice() method in JavaScript is used to change the contents 
 of an array by removing or replacing existing elements and/or adding new elements in place */ 
-const array = [1, 2, 3, 4, 5];
-array.splice(2, 1, 'a', 'b');
-console.log(array); 
-/**output:(6) [1, 2, 'a', 'b', 4, 5]*/
+let array = ['apple', 'banana', 'cherry', 'date'];
+
+// Remove 'banana' and 'cherry' and insert 'orange' at index 1
+array.splice(1, 2, 'orange');
+
+console.log(array); // Output: ['apple', 'orange', 'date']
