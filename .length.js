@@ -1,5 +1,5 @@
 /**length:it finds the length of the given
  *  array */
-const array = [1, 2, 3];
+const array = ["abcd", "efgh", "ijkl"];
 console.log(array.length); 
 /**output:3*/
