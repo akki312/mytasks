@@ -5,9 +5,11 @@ previousDay.setDate(today.getDate());
 
 var previousDayDate = previousDay.getDate();
 var previousDayMonth = previousDay.getMonth() + 1; 
-var previousDayYear = previousDay.getFullYear() - 1; 
+var previousDayYear = previousDay.getFullYear() + 1; 
 
 console.log("year: " + previousDayYear);
 console.log("month: " + previousDayMonth);
 console.log("date: " + previousDayDate);
-
+ console.log(previousDayDate);
+ console.log(previousDayMonth);
+ console.log(previousDayYear);
