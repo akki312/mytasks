@@ -13,7 +13,7 @@ function differenceFrom13(number) {
 
 console.log(differenceFrom13(8));    
 console.log(differenceFrom13(13));  
-console.log(differenceFrom13(20));  
+console.log(differenceFrom13(16));  
 /**output: 5
  *         0
  *         14

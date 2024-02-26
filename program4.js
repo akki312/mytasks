@@ -19,4 +19,5 @@ function findLongestString(strings) {
 
 // Test the function
 const stringsArray = ['aksh', 'sis', 'aksih', 'itla', 'akshithsistla'];
-console.log("Longest string:", findLongestString(stringsArray)); // Output: "pineapple"
+console.log("Longest string:", findLongestString(stringsArray)); 
+// Output: "akshithsistla"
