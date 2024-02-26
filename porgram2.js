@@ -18,3 +18,7 @@ function removeCharacterAtPosition(inputString, position) {
 console.log(removeCharacterAtPosition("akshith", 5));  
 console.log(removeCharacterAtPosition("sistla", 2));  
 console.log(removeCharacterAtPosition("akshithsistla", 7));   
+/**ouput: akshih
+ *        sitla
+ *        akshithistla
+ */
