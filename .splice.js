@@ -2,7 +2,7 @@
 of an array by removing or replacing existing elements and/or adding new elements in place */ 
 let array = ['abcd', 'efgh', 'jhkl', 'sdaga'];
 
-// Remove 'banana' and 'cherry' and insert 'orange' at index 1
+
 array.splice(1, 2, 'akki');
 
 console.log(array); // Output: ['apple', 'orange', 'date']
