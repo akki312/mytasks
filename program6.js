@@ -19,3 +19,5 @@ const replacementNumber = 99;
 
 console.log("Original array:", originalArray);
 console.log("Array after replacement:", replaceNumbers(originalArray, originalNumber, replacementNumber));
+/**output:Original array: (1) [2]
+          Array after replacement: (1) [99] */
