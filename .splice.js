@@ -5,4 +5,4 @@ let array = ['abcd', 'efgh', 'jhkl', 'sdaga'];
 
 array.splice(1, 2, 'akki');
 
-console.log(array); // Output: ['apple', 'orange', 'date']
+console.log(array); 

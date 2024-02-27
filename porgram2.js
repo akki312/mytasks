@@ -22,3 +22,13 @@ console.log(removeCharacterAtPosition("akshithsistla", 7));
  *        sitla
  *        akshithistla
  */
+
+
+
+//git push
+//git commit
+//git pull
+//git checkout
+//git status
+//git config user-name ""
+//git config 
