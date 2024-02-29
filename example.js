@@ -32,8 +32,12 @@ let new_arr = v.slice(1, 2);
 console.log(new_arr);
 delete b.gender;
 console.log(b); 
-
 console.log(shifted); 
 a.forEach(element => {
     console.log(element);
 })
+const obj = 36;
+  
+  console.log(obj.valueOf()); 
+  const result = obj + 10;
+  console.log(result); 
