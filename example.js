@@ -41,3 +41,20 @@ const obj = 36;
   console.log(obj.valueOf()); 
   const result = obj + 10;
   console.log(result); 
+
+  function removeCharacter(str, index) {
+    if (index < 0 || index >= str.length) {
+        return "Invalid index";
+    }
+
+    return str.slice(0, index) + str.slice(index + 1);
+}
+
+// Example usage:
+const originalString = "Hello, world!";
+const indexToRemove = 7; // Remove character at index 7 (which is 'w')
+const newString = removeCharacter(originalString, indexToRemove);
+
+console.log("Original string:", originalString);
+console.log("New string:", newString); // Output: "Hello, orld!"
+
