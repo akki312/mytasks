@@ -13,7 +13,7 @@ function replaceNumbers(array, originalNumber, replacementNumber) {
 }
 
 
-const originalArray = [2];
+const originalArray = [2,3,5,6,8];
 const originalNumber = 2;
 const replacementNumber = 99;
 

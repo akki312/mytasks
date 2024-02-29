@@ -5,3 +5,7 @@ v.splice(1, 2, 'ledd');
 console.log(concatenated);
 console.log(v);
 console.log(v.toString());
+a.sort();
+console.log(a);
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+console.log(a.reduce(reducer)); 
