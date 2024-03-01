@@ -65,4 +65,5 @@ console.log(str.charAt(0));
 console.log(str.charCodeAt(0));
 console.log(str.indexOf());
 console.log(str.lastIndexOf());
-
+console.log(str.replace("akshith", "sistlas"))
+console.log(str.trim());
