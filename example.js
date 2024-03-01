@@ -2,6 +2,7 @@ let v = ["akshith", "sistla", "abcd", "aksh"];
 var shifted = v.shift();
 let b = {person: "akshith", gender: "male"}
 let a = [7, 8, 9, 1, 3];
+let str = "akshith";
 const concatenated = v.concat(a);
 v.splice(1, 2, 'ledd');
 console.log(concatenated);
@@ -37,6 +38,7 @@ a.forEach(element => {
     console.log(element);
 })
 const obj = 36;
+console.log()
   
   console.log(obj.valueOf()); 
   const result = obj + 10;
@@ -57,4 +59,10 @@ const newString = removeCharacter(originalString, indexToRemove);
 
 console.log("Original string:", originalString);
 console.log("New string:", newString); // Output: "Hello, orld!"
+console.log(str.toUpperCase());
+console.log(str.toLowerCase());
+console.log(str.charAt(0)); 
+console.log(str.charCodeAt(0));
+console.log(str.indexOf());
+console.log(str.lastIndexOf());
 
