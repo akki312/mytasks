@@ -13,6 +13,5 @@ function findLongestWord(str) {
     }
  return longestWord;
 }
-
 let exampleString = 'Web Development Tutorial';
 console.log(findLongestWord(exampleString)); 
