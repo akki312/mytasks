@@ -8,4 +8,4 @@ function sumOfcubes(numbers) {
 }
 
 const numbers = [1, 2, 3, 4, 5];
-console.log("Sum of squares:", sumOfcubes(numbers)); 
+console.log("Sum of cubes:", sumOfcubes(numbers)); 
