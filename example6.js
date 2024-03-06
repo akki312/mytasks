@@ -1,4 +1,4 @@
-//factorial of anumber
+//factorial of a number
 function factorial(n) {
     
     if (n === 0) {

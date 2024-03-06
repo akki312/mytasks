@@ -1,10 +1,10 @@
 // sum of squares
 function sumOfSquares(numbers) {
-    let sum = 0;
+    let s = 0;
     for (let i = 0; i < numbers.length; i++) {
-        sum += numbers[i] * numbers[i]; 
+        s += numbers[i] * numbers[i]; 
     }
-    return sum;
+    return s;
 }
 
 
