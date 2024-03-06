@@ -3,3 +3,4 @@
 let number = 32243;
 let reversedNumber = number.toString().split('').reverse().join('');
 console.log(reversedNumber); // Output: 34223
+
