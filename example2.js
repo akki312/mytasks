@@ -7,9 +7,6 @@ function reverseNumber(num) {
         reversedStr += numStr[i];
     }
     let reversedNum = parseInt(reversedStr, 10);
-    if (isNegative) {
-        reversedNum *= -1;
-    }
         return reversedNum;
 }
 console.log(reverseNumber(143));  

@@ -8,6 +8,4 @@ function isPalindrome(str) {
     }
     return true;
 }
-console.log(isPalindrome("A man, a plan, a canal, Panama")); // Output: true
-console.log(isPalindrome("racecar")); // Output: true
-console.log(isPalindrome("hello")); // Output: false
+console.log(isPalindrome("hello")); 
