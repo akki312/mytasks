@@ -16,7 +16,7 @@ function capitalizeFirstLetterOfEachWord(str) {
     return capitalizedString;
 }
 
-// Test the function
+
 let inputString = "the quick brown fox";
 console.log("Original string:", inputString);
 console.log("String with first letter of each word capitalized:", capitalizeFirstLetterOfEachWord(inputString));
