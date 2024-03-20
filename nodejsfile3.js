@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-fs.unlink('mynewfile1.txt',  function (err) {
+fs.writeFile('mynewfile3.txt', 'Hello content!', function (err) {
   if (err) throw err;
-  console.log('filedeleted!');
+  console.log('Saved!');
 });
