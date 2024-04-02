@@ -23,7 +23,7 @@ async function connectToMongoDB() {
 
         
         const collection = db.collection('mycollection');
-        await collection.insertOne({ name: "John", age: 30 });
+        await collection.insertOne({ name: "akshith", age: 24 });
 
         console.log("Document inserted successfully");
 
