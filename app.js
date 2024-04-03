@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = "mongodb://localhost:27017"; // MongoDB default URI
+const uri = "mongodb://localhost:27017c"; // MongoDB default URI
 const dbName = "mydatabase";
 const client = new MongoClient(uri);
 
@@ -16,7 +16,7 @@ async function connectToMongoDB() {
         console.error("Error connecting to MongoDB:", error);
     } finally {
         await client.close();
-        console.log("Disconnected from MongoDB");
+        console.log("Disconnected from MongoDB"); 
     }
 }
 
