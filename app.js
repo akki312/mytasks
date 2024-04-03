@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = "mongodb+srv://akshithsistla:<password>@cluster0.iljkeyx.mongodb.net/"; // MongoDB default URI
+const uri = "mongodb://localhost:27017c"; // MongoDB default URI
 const dbName = "mydatabase";
 const client = new MongoClient(uri);
 
