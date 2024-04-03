@@ -7,3 +7,4 @@ async function deleteDocument() {
 
 
 deleteDocument();
+//const result = await collection.deleteOne({ name: "John" });
