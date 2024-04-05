@@ -1,24 +1,29 @@
 const nodemailer = require('nodemailer');
 
-let mailTransporter = nodemailer.createTransport({
-    service: 'gmail',
+// Create a Nodemailer transporter with SMTP configuration
+let transporter = nodemailer.createTransport({
+    host: 'smtp.example.com',
+    port: 25,
+    secure: false, // true for 465, false for other ports
     auth: {
         user: 'akshithsistla@gmail.com',
-        pass: 'Akki@8008'
+        pass: 'zqafotiblukmdrrk'
     }
 });
 
-let mailDetails = {
-    from: 'akshithsistla@gmail.com',
-    to: 'sistlaakshith@gmail.com',
-    subject: 'Test mail',
-    text: 'testing mail'
+// Define email details
+let mailOptions = {
+    from: 'sender@example.com',
+    to: 'recipient@example.com',
+    subject: 'Test Email',
+    text: 'This is a test email sent from Node.js using Nodemailer.'
 };
 
-mailTransporter.sendMail(mailDetails, function (err, data) {
-    if (err) {
-        console.error('Error Occurs:', err);
+// Send email
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.error('Error Occurs:', error);
     } else {
-        console.log('Email sent successfully');
+        console.log('Email sent successfully:', info.response);
     }
 });
