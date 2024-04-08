@@ -1,34 +1,34 @@
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
 
-// Nodemailer configuration
+
 const transporter = nodemailer.createTransport({
-    host: 'smtp.example.com', // Your SMTP server hostname
-    port: 587, // Your SMTP server port
-    secure: false, // true for 465, false for other ports
+    host: 'smtp.example.com', 
+    port: 587, 
+    secure: false, 
     auth: {
-        user: 'akshithsistla@gmail.com', // Your SMTP username
-        pass: 'xnua tuis pqqd clbx' // Your SMTP password
+        user: 'akshithsistla@gmail.com', 
+        pass: 'xnua tuis pqqd clbx' 
     }
 });
 
-// MongoDB connection URI
+
 const mongoURI = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
 
-// Function to generate OTP
+
 function generateOTP() {
     return Math.floor(1000 + Math.random() * 9000); // Generate 4-digit OTP
 }
 
-// Function to send OTP via email
+
 async function sendOTP(email, otp) {
     try {
-        // Send email with OTP
+       
         await transporter.sendMail({
-            from: 'akshithsistla@gmail.com', // Sender email address
-            to: email, // Recipient email address
-            subject: 'Your OTP', // Email subject
-            text: `Your OTP is: ${otp}` // Email body
+            from: 'akshithsistla@gmail.com', 
+            to: email, 
+            subject: 'Your OTP', 
+            text: `Your OTP is: ${otp}`
         });
         console.log('OTP sent successfully');
     } catch (error) {
@@ -53,7 +53,7 @@ async function saveOTP(email, otp) {
 }
 
 // Example usage
-const userEmail = 'user@example.com';
+const userEmail = 'sistlaakshith@gmail.com';
 const otp = generateOTP();
 saveOTP(userEmail, otp);
 sendOTP(userEmail, otp);
