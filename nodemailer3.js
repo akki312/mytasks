@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 
 // Function to generate OTP
 function generateOTP() {
-    return Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit OTP
+    return Math.floor(100000 + Math.random() * 9000); // Generate a 4-digit OTP
 }
 
 // Function to send OTP via email and store in MongoDB
