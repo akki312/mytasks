@@ -19,7 +19,7 @@ async function sendOTPByEmail(email, otp) {
     const mailOptions = {
         from: 'akshithsistla@gmail.com', // Sender address
         to: 'sistlaakshith@gmail.com', // Recipient address
-        subject: 'Your OTP', // Subject line
+        subject: 'otp of application', // Subject line
         text: `Your OTP is: ${otp}` // Plain text body
     };
 
