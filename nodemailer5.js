@@ -2,33 +2,31 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 
 const app = express();
-const port = 3000; // Port for the Express.js server
-
-// Function to generate OTP
+const port = 3000; 
 function generateOTP() {
-    return Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit OTP
+    return Math.floor(1000 + Math.random() * 9000); 
 }
 
-// Function to send OTP via email
+
 async function sendOTPByEmail(email, otp) {
-    // Create a transporter object using the default SMTP transport
+    
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'akshithsistla@gmail.com', // Your Gmail email address
-            pass: 'jhlt dikb ijol qclu' // Your Gmail password or app-specific password
+            user: 'akshithsistla@gmail.com', 
+            pass: 'jhlt dikb ijol qclu' 
         }
     });
 
-    // Email content
+    
     const mailOptions = {
-        from: 'akshithsistla@gmail.com', // Sender address
-        to: 'sistlaakshith@gmail.com', // Recipient address
-        subject: 'Your OTP', // Subject line
-        text: `Your OTP is: ${otp}` // Plain text body
+        from: 'akshithsistla@gmail.com',
+        to: 'sistlaakshith@gmail.com',
+        subject: 'Your OTP', 
+        text: `Your OTP is: ${otp}` 
     };
 
-    // Send email
+   
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log(`OTP sent to ${email}:`, info.response);
@@ -37,9 +35,9 @@ async function sendOTPByEmail(email, otp) {
     }
 }
 
-// API endpoint to send OTP emails
+
 app.post('/send-otp', async (req, res) => {
-    const { emails } = req.body; // Array of email addresses to send OTPs to
+    const { emails } = req.body; 
     try {
         for (const email of emails) {
             const otp = generateOTP();
@@ -52,7 +50,7 @@ app.post('/send-otp', async (req, res) => {
     }
 });
 
-// Start the Express.js server
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
