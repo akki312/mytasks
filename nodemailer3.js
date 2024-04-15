@@ -1,34 +1,34 @@
 const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
 
-// Function to generate OTP
+
 function generateOTP() {
-    return Math.floor(100000 + Math.random() * 9000); // Generate a 4-digit OTP
+    return Math.floor(100000 + Math.random() * 9000); 
 }
 
-// Function to send OTP via email and store in MongoDB
+
 async function sendOTPByEmail(email, otp) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'akshithsistla@gmail.com', // Your Gmail email address
-            pass: 'jhlt dikb ijol qclu' // Your Gmail password or app-specific password
+            user: 'akshithsistla@gmail.com', 
+            pass: 'jhlt dikb ijol qclu' 
         }
     });
 
     const mailOptions = {
-        from: 'akshithsistla@gmail.com', // Sender address
-        to: 'sistlaakshith@gmail.com', // Recipient address
-        subject: 'otp of application', // Subject line
-        text: `Your OTP is: ${otp}` // Plain text body
+        from: 'akshithsistla@gmail.com', 
+        to: 'sistlaakshith@gmail.com', 
+        subject: 'otp of application', 
+        text: `Your OTP is: ${otp}` 
     };
 
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log('Email sent:', info.response);
 
-        // Store user email and OTP in MongoDB
-        const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/'; // MongoDB connection URI
+        
+        const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/'; 
         const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
         await client.connect();
         const database = client.db('otpdatabase');
@@ -38,11 +38,11 @@ async function sendOTPByEmail(email, otp) {
     } catch (error) {
         console.error('Error sending email or storing OTP:', error);
     } finally {
-        await client.close(); // Close MongoDB connection
+        await client.close(); 
     }
 }
 
-// Example usage
+
 const userEmail = 'sistlaakshith@gmail.com';
 const otp = generateOTP();
 
