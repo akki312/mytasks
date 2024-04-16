@@ -2,7 +2,7 @@ const twilio = require('twilio');
 const { MongoClient } = require('mongodb');
 
 const accountSid = 'ACd162eafc1667948933290a452b4c55be';
-const authToken = '33eb1078378fafa1bce6cf501b1e8b80';
+const authToken = '5c9e55f6a38c18214855a104be37e29e';
 const twilioPhoneNumber = '+12513090858';
 
 const client = twilio(accountSid, authToken);
@@ -14,7 +14,7 @@ async function sendOTPBySMSAndStoreInMongo(phoneNumber, otp) {
         .create({
             body: `Your OTP is: ${otp}`,
             from: twilioPhoneNumber,
-            to: '918008133369'
+            to: '+918008133369'
         })
         .then(async message => {
             console.log('SMS sent:', message.sid);
