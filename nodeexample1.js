@@ -24,8 +24,8 @@ async function sendOTPByEmail(email, otp) {
         const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
         const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
         await client.connect();
-        const database = client.db('otpdatabase');
-        const collection = database.collection('otpcollection');
+        const database = client.db('testdatabase');
+        const collection = database.collection('testcollection');
         await collection.insertOne({ email, otp});
         console.log('otp stored in MOngodb');
      } catch(error) {
