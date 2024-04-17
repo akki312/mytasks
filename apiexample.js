@@ -26,30 +26,25 @@ async function sendOTPByEmail(email, otp) {
         }
     });
 
-    // Email content
-    const mailOptions = {
+        const mailOptions = {
         from: 'akshithsistla@gmail.com',
         to: 'sistlaakshith@gmail.com',
         subject: 'OTP of Application',
         text: `Your OTP is: ${otp}`
     };
 
-    // Send email
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.response);
 
-    // MongoDB connection
     const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
 
-    // MongoDB insertion
     const database = client.db('staticOTPdatabase');
     const collection = database.collection('OTPCollection');
     await collection.insertOne({ email, otp });
     console.log('OTP stored in MongoDB');
 
-    // Close MongoDB connection
     await client.close();
 }
 app.listen(PORT, () => {
