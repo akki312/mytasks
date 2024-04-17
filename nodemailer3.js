@@ -31,7 +31,7 @@ async function sendOTPByEmail(email, otp) {
     } catch (error) {
         console.error('Error sending email or storing OTP:', error);
     } finally {
-        await client.close();
+        await client.close(); 
     }
 }
 
