@@ -4,21 +4,21 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Sample data
+
 let users = [
     { id: 1, name: 'John Doe', email: 'john@example.com' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
 ];
 
-// Middleware to parse JSON requests
+
 app.use(bodyParser.json());
 
-// GET /api/users - Retrieve all users
+
 app.get('/api/users', (req, res) => {
     res.json(users);
 });
 
-// GET /api/users/:id - Retrieve a user by ID
+
 app.get('/api/users/:id', (req, res) => {
     const userId = parseInt(req.params.id);
     const user = users.find(user => user.id === userId);
@@ -29,14 +29,13 @@ app.get('/api/users/:id', (req, res) => {
     }
 });
 
-// POST /api/users - Create a new user
 app.post('/api/users', (req, res) => {
     const newUser = req.body;
     users.push(newUser);
     res.status(201).json(newUser);
 });
 
-// PUT /api/users/:id - Update an existing user by ID
+
 app.put('/api/users/:id', (req, res) => {
     const userId = parseInt(req.params.id);
     const updatedUser = req.body;
