@@ -1,9 +1,9 @@
 const { MongoClient } = require('mongodb');
 
 const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/'; // MongoDB connection URI
-const dbName = 'movieTickets';
+const dbName = 'movieTickets'; // Name of the database
 
-
+// Function to connect to MongoDB and initialize the movies collection
 async function connectDatabase() {
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   try {
@@ -15,20 +15,20 @@ async function connectDatabase() {
   }
 }
 
-
+// Define movie data
 const moviesData = [
   { id: 1, title: 'The Avengers', seats: Array(100).fill('available') },
   { id: 2, title: 'The Shawshank Redemption', seats: Array(80).fill('available') },
   { id: 3, title: 'The Godfather', seats: Array(120).fill('available') }
 ];
 
-
+// Function to initialize movies collection with movie data
 async function initializeMoviesCollection() {
   const moviesCollection = await connectDatabase();
   if (moviesCollection) {
     try {
-      await moviesCollection.deleteMany({}); 
-      await moviesCollection.insertMany(moviesData); 
+      await moviesCollection.deleteMany({}); // Clear existing data
+      await moviesCollection.insertMany(moviesData); // Insert movie data
       console.log('Movies collection initialized');
     } catch (error) {
       console.error('Error initializing movies collection:', error);
@@ -36,7 +36,7 @@ async function initializeMoviesCollection() {
   }
 }
 
-
+// Function to display movie list with available seats
 async function displayMovies() {
   const moviesCollection = await connectDatabase();
   if (moviesCollection) {
@@ -54,7 +54,7 @@ async function displayMovies() {
 }
 
 
-
+// Function to book tickets with seat selection
 async function bookTicket(movieId, selectedSeats) {
     const moviesCollection = await connectDatabase();
     if (moviesCollection) {
@@ -71,7 +71,7 @@ async function bookTicket(movieId, selectedSeats) {
           }
           movie.seats[seat - 1] = 'booked';
         }
-       
+        // Update the movie document in the collection
         await moviesCollection.updateOne(
           { id: movieId },
           { $set: { seats: movie.seats } }
@@ -85,15 +85,15 @@ async function bookTicket(movieId, selectedSeats) {
   
 
 
-
+// Example usage
 async function runExample() {
   await initializeMoviesCollection();
   await displayMovies();
-  await bookTicket(1, [52, 54, 55]);
+  await bookTicket(1, [22, 24, 25]);
   await displayMovies();
-  await bookTicket(3, [55, 52, 53]);
+  await bookTicket(3, [25, 22, 3]);
   await displayMovies();
-  await bookTicket(2, [51, 53, 56]);
+  await bookTicket(2, [21, 23, 26]);
   await displayMovies();
 }
 
