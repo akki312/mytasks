@@ -11,7 +11,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 
-mongoose.connect('mongodb://localhost:27017/movieDB', {
+mongoose.connect('mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/movieDB', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
