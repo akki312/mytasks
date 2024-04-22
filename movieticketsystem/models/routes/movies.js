@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
         await movie.save();
         res.redirect('/movies');
     } catch (error) {
-        res.status(400).json({ error: 'Invalid request body' });
+        res.status(400).json({ error: 'Invalid request' });
     }
 });
 
