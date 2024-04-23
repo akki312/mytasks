@@ -67,7 +67,7 @@ async function main() {
 
         // Book tickets for events
         await bookingSystem.bookTickets("Concert", 50);
-        await bookingSystem.bookTickets("Concert", 70); // Not enough tickets available
+        await bookingSystem.bookTickets("Concert", 50); // Not enough tickets available
         await bookingSystem.bookTickets("Football Match", 10); // Event not found in the system
     } finally {
         await client.close();
