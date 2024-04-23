@@ -1,77 +1,95 @@
+const http = require('http');
 const { MongoClient } = require('mongodb');
 
-class Event {
-    constructor(name, capacity, ticketsSold = 0) {
-        this.name = name;
-        this.capacity = capacity;
-        this.ticketsSold = ticketsSold;
-    }
+const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/'; // MongoDB connection URI
+const dbName = 'Ticketsofmovies';
+const port = 3000; // Port number to listen on
 
-    ticketsAvailable() {
-        return this.capacity - this.ticketsSold;
-    }
-
-    sellTickets(quantity) {
-        if (this.ticketsAvailable() >= quantity) {
-            this.ticketsSold += quantity;
-            console.log(`${quantity} tickets sold for ${this.name}`);
-            return true;
-        } else {
-            console.log("Not enough tickets available.");
-            return false;
-        }
-    }
+async function connectDatabase() {
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    return db.collection('movies');
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
 }
 
-class TicketBookingSystem {
-    constructor(db) {
-        this.db = db;
-    }
+const moviesData = [
+  { id: 1, title: 'The Avengers', seats: Array(100).fill('available') },
+  { id: 2, title: 'The Shawshank Redemption', seats: Array(100).fill('available') },
+  { id: 3, title: 'The Godfather', seats: Array(120).fill('available') }
+];
 
-    async addEvent(name, capacity) {
-        const event = new Event(name, capacity);
-        const collection = this.db.collection('events');
-        await collection.insertOne(event);
-        console.log(`Event '${name}' added to the system with a capacity of ${capacity}.`);
-    }
-
-    async bookTickets(eventName, quantity) {
-        const collection = this.db.collection('events');
-        const event = await collection.findOne({ name: eventName });
-        if (event) {
-            const success = event.sellTickets(quantity);
-            if (success) {
-                await collection.updateOne({ name: eventName }, { $set: { ticketsSold: event.ticketsSold } });
-            }
-        } else {
-            console.log(`Event '${eventName}' not found in the system.`);
-        }
-    }
-}
-
-// Example usage:
-const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-async function main() {
+async function initializeMoviesCollection() {
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
     try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-
-        const db = client.db('ticket_booking');
-        const bookingSystem = new TicketBookingSystem(db);
-
-        // Add events to the system
-        await bookingSystem.addEvent("Concert", 100);
-        await bookingSystem.addEvent("Theater Play", 50);
-
-        // Book tickets for events
-        await bookingSystem.bookTickets("Concert", 50);
-        await bookingSystem.bookTickets("Concert", 50); // Not enough tickets available
-        await bookingSystem.bookTickets("Football Match", 10); // Event not found in the system
-    } finally {
-        await client.close();
+      await moviesCollection.deleteMany({}); 
+      await moviesCollection.insertMany(moviesData); 
+      console.log('Movies collection initialized');
+    } catch (error) {
+      console.error('Error initializing movies collection:', error);
     }
+  }
 }
 
-main().catch(console.error);
+async function displayMovies(req, res) {
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const movies = await moviesCollection.find({}).toArray();
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify(movies));
+    } catch (error) {
+      console.error('Error fetching movies from database:', error);
+      res.writeHead(500, {'Content-Type': 'text/plain'});
+      res.end('Internal Server Error');
+    }
+  }
+}
+
+async function bookTicket(movieId, selectedSeats) {
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const movie = await moviesCollection.findOne({ id: movieId });
+      if (!movie) {
+        console.log('Movie not found');
+        return;
+      }
+      for (const seat of selectedSeats) {
+        if (movie.seats[seat] !== 'available') {
+          console.log(`Seat ${seat} is already booked`);
+          continue;
+        }
+        movie.seats[seat] = 'booked';
+      }
+      await moviesCollection.updateOne({ id: movieId }, { $set: { seats: movie.seats } });
+      console.log(`Successfully booked ${selectedSeats.length} ticket(s) for ${movie.title}`);
+    } catch (error) {
+      console.error('Error booking tickets:', error);
+    }
+  }
+}
+
+async function handleRequest(req, res) {
+  if (req.url === '/movies') {
+    await displayMovies(req, res);
+  } else {
+    res.writeHead(404, {'Content-Type': 'text/plain'});
+    res.end('Not Found');
+  }
+}
+
+async function runExample() {
+    await initializeMoviesCollection();
+    // Book tickets for some movies
+    await bookTicket(1, [1, 2, 3]); // Book 3 tickets for The Avengers
+    await bookTicket(2, [51, 52, 53]); // Book 3 tickets for The Shawshank Redemption
+    await bookTicket(3, [21, 32, 43]); // Book 3 tickets for The Godfather
+    console.log(`Server running at http://localhost:${port}/`);
+    http.createServer(handleRequest).listen(port);
+  }
+runExample();
