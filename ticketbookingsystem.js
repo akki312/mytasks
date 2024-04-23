@@ -63,11 +63,11 @@ async function bookTicket(movieId, selectedSeats) {
           return;
         }
         for (const seat of selectedSeats) {
-          if (movie.seats[seat - 1] !== 'available') {
+          if (movie.seats[seat] !== 'available') {
             console.log(`Seat ${seat} is already booked`);
             continue;
           }
-          movie.seats[seat - 1] = 'booked';
+          movie.seats[seat] = 'booked';
         }
         await moviesCollection.updateOne({ id: movieId }, { $set: { seats: movie.seats } });
         console.log(`Successfully booked ${selectedSeats.length} ticket(s) for ${movie.title}`);
@@ -81,7 +81,7 @@ async function bookTicket(movieId, selectedSeats) {
   async function runExample() {
   await initializeMoviesCollection();
   await displayMovies();
-  await bookTicket(1, ['1', '2', '3']);
+  await bookTicket(1, [51, 52, 53]);
   await displayMovies();
   await bookTicket(2, [51, 52, 53]);
   await displayMovies();
