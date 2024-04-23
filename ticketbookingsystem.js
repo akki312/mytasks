@@ -1,5 +1,6 @@
 const { MongoClient } = require('mongodb');
 
+
 const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/'; // MongoDB connection URI
 const dbName = 'movieTickets';
 
