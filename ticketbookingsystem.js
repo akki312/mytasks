@@ -82,11 +82,11 @@ async function bookTicket(movieId, selectedSeats) {
   async function runExample() {
   await initializeMoviesCollection();
   await displayMovies();
-  await bookTicket(1, [1, 2, 3]);
+  await bookTicket(1, [91, 92, 93]);
   await displayMovies();
-  await bookTicket(2, [51, 52, 53]);
+  await bookTicket(2, [91, 92, 93]);
   await displayMovies();
-  await bookTicket(3, [21, 32, 43]);
+  await bookTicket(3, [91, 92, 93]);
   await displayMovies();
 }
 
