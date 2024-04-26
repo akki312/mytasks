@@ -98,23 +98,23 @@ async function bookTicket(movieId, categoryName, selectedSeat) {
         return;
       }
       
-      // Find the category within the movie
+      
       const category = movie.seatCategories.find(cat => cat.name === categoryName);
       if (!category) {
         console.log('Category not found');
         return;
       }
 
-      // Check if the selected seat is available
+      
       if (category.seats[selectedSeat] !== 'available') {
         console.log(`Seat ${selectedSeat} in category ${categoryName} is already booked`);
         return;
       }
       
-      // Book the selected seat
+      
       category.seats[selectedSeat] = 'booked';
       
-      // Update the movie in the database
+      
       await moviesCollection.updateOne(
         { id: movieId, 'seatCategories.name': categoryName },
         { $set: { 'seatCategories.$.seats': category.seats } }
@@ -131,20 +131,24 @@ async function bookTicket(movieId, categoryName, selectedSeat) {
 async function runExample() {
   await initializeMoviesCollection();
   await displayMovies();
-  await bookTicket(1, 'VIP', 10); // Book seat 10 in the VIP category for movie with ID 1
+  await bookTicket(1, 'VIP', 10); 
   await bookTicket(1, 'Standard', 11);
   await bookTicket(1, 'Economy', 12);
   await displayMovies();
   await bookTicket(2, 'VIP', 12);
-  await bookTicket(2, 'VIP', 11);
-  await bookTicket(2, 'VIP', 13)
+  await bookTicket(2, 'Standard', 11);
+  await bookTicket(2, 'Economy', 13)
   await displayMovies();
   await bookTicket(3, 'VIP', 1);
   await bookTicket(3, 'Economy', 2);
-  await bookTicket(3, 'Economy', 3);
+  await bookTicket(3, 'Standard', 3);
   await displayMovies();
-  await bookTicket(4, 'vip', 2);
-  await bookTicket(3, 'vip', 3);
+  await bookTicket(4, 'VIP', 2);
+  await bookTicket(4, 'VIP', 3);
+  await bookTicket(4, 'Economy', 1);
+  await bookTicket(4, 'Economy', 2);
+  await bookTicket(4, 'Standard', 1);
+  await bookTicket(4, 'Standard', 2);
   await displayMovies();
 }
 
