@@ -122,6 +122,11 @@ app.delete('/movies/:id', async (req, res) => {
   }
 });
 
+// Define a route handler for the root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Movie Ticket Booking API');
+});
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
