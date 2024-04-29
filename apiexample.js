@@ -1,52 +1,78 @@
 const express = require('express');
-const app = express();
-const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
-const PORT = process.env.PORT || 3000;
+
+const app = express();
+const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
+const dbName = 'movieTickets';
 
 app.use(express.json());
-app.post('/api/send-otp', async (req, res) => {
-    const { email, otp } = req.body;
 
-    try {
-        await sendOTPByEmail(email, otp);
-        res.status(200).json({ message: 'OTP sent and stored successfully' });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-async function sendOTPByEmail(email, otp) {
-    // Nodemailer configuration
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'akshithsistla@gmail.com',
-            pass: 'jhlt dikb ijol qclu'
-        }
-    });
-
-        const mailOptions = {
-        from: 'akshithsistla@gmail.com',
-        to: 'sistlaakshith@gmail.com',
-        subject: 'OTP of Application',
-        text: `Your OTP is: ${otp}`
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.response);
-
-    const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+async function connectDatabase() {
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  try {
     await client.connect();
-
-    const database = client.db('staticOTPdatabase');
-    const collection = database.collection('OTPCollection');
-    await collection.insertOne({ email, otp });
-    console.log('OTP stored in MongoDB');
-
-    await client.close();
+    const db = client.db(dbName);
+    return db.collection('movies');
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
 }
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+
+// Endpoint to display available movies and seats
+app.get('/movies', async (req, res) => {
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const movies = await moviesCollection.find({}).toArray();
+      res.json(movies);
+    } catch (error) {
+      console.error('Error fetching movies from database:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
+// Endpoint to book a movie ticket
+app.post('/book', async (req, res) => {
+  const { movieId, categoryName, selectedSeat } = req.body;
+  if (!movieId || !categoryName || !selectedSeat) {
+    return res.status(400).json({ error: 'Missing parameters' });
+  }
+
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const movie = await moviesCollection.findOne({ id: movieId });
+      if (!movie) {
+        return res.status(404).json({ error: 'Movie not found' });
+      }
+      
+      const category = movie.seatCategories.find(cat => cat.name === categoryName);
+      if (!category) {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+      
+      if (category.seats[selectedSeat] !== 'available') {
+        return res.status(400).json({ error: `Seat ${selectedSeat} in category ${categoryName} is already booked` });
+      }
+      
+      category.seats[selectedSeat] = 'booked';
+      
+      await moviesCollection.updateOne(
+        { id: movieId, 'seatCategories.name': categoryName },
+        { $set: { 'seatCategories.$.seats': category.seats } }
+      );
+
+      res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}` });
+    } catch (error) {
+      console.error('Error booking ticket:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
+// Start the server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
