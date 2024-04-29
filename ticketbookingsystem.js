@@ -50,6 +50,15 @@ const moviesData = [
       { name: 'Standard', seats: Array(90).fill('available') },
       { name: 'Economy', seats: Array(140).fill('available') }
     ] 
+  },
+  { 
+    id: 5, 
+    title: 'thatthing',
+    seatCategories: [
+      { name: 'VIP', seats: Array(40).fill('available') },
+      { name: 'Standard', seats: Array(90).fill('available') },
+      { name: 'Economy', seats: Array(140).fill('available') }
+    ] 
   }
    
 ];
@@ -97,29 +106,20 @@ async function bookTicket(movieId, categoryName, selectedSeat) {
         console.log('Movie not found');
         return;
       }
-      
-      
       const category = movie.seatCategories.find(cat => cat.name === categoryName);
       if (!category) {
         console.log('Category not found');
         return;
       }
-
-      
       if (category.seats[selectedSeat] !== 'available') {
         console.log(`Seat ${selectedSeat} in category ${categoryName} is already booked`);
         return;
       }
-      
-      
       category.seats[selectedSeat] = 'booked';
-      
-      
       await moviesCollection.updateOne(
         { id: movieId, 'seatCategories.name': categoryName },
         { $set: { 'seatCategories.$.seats': category.seats } }
       );
-
       console.log(`Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}`);
     } catch (error) {
       console.error('Error booking ticket:', error);
@@ -149,6 +149,10 @@ async function runExample() {
   await bookTicket(4, 'Economy', 2);
   await bookTicket(4, 'Standard', 1);
   await bookTicket(4, 'Standard', 2);
+  await displayMovies();
+  await bookTicket(5, 'VIP', 1);
+  await bookTicket(5, 'VIP', 5);
+  await bookTicket(5, 'Standard', 1);
   await displayMovies();
 }
 
