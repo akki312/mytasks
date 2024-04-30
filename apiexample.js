@@ -31,8 +31,6 @@ app.get('/movies', async (req, res) => {
         }
     }
 });
-
-// Endpoint to book a movie ticket
 app.post('/book', async (req, res) => {
     const { movieId, categoryName, selectedSeat } = req.body;
     if (!movieId || !categoryName || !selectedSeat) {
@@ -104,7 +102,7 @@ app.put('/movies/:id', async (req, res) => {
             console.error('Error updating movie:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
-    }
+    }   
 });
 
 
@@ -125,8 +123,6 @@ app.get('/movies/:id', async (req, res) => {
         }
     }
 });
-
-// POST method to create a new movie
 app.post('/movies', async (req, res) => {
     const newMovie = req.body;
     const moviesCollection = await connectDatabase();
@@ -140,8 +136,6 @@ app.post('/movies', async (req, res) => {
         }
     }
 });
-
-// DELETE method to delete a movie by ID
 app.delete('/movies/:id', async (req, res) => {
     const movieId = req.params.id;
     const moviesCollection = await connectDatabase();
@@ -158,12 +152,9 @@ app.delete('/movies/:id', async (req, res) => {
         }
     }
 });
-
-// Define a route handler for the root URL
 app.get('/', (req, res) => {
     res.send('Welcome to the Movie Ticket Booking API');
 });
-
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
