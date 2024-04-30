@@ -28,18 +28,18 @@ const moviesData = [
     id: 2, 
     title: 'The Shawshank Redemption', 
     seatCategories: [
-      { name: 'VIP', seats: Array(30).fill('available') },
-      { name: 'Standard', seats: Array(80).fill('available') },
-      { name: 'Economy', seats: Array(120).fill('available') }
+      { name: 'VIP', seats: Array(30).fill('available'), price:30 },
+      { name: 'Standard', seats: Array(80).fill('available'), price:20 },
+      { name: 'Economy', seats: Array(120).fill('available'), price:10 }
     ] 
   },
   { 
     id: 3, 
     title: 'The Godfather', 
     seatCategories: [
-      { name: 'VIP', seats: Array(40).fill('available') },
-      { name: 'Standard', seats: Array(90).fill('available') },
-      { name: 'Economy', seats: Array(140).fill('available') }
+      { name: 'VIP', seats: Array(40).fill('available'), price:400 },
+      { name: 'Standard', seats: Array(90).fill('available'), price:200 },
+      { name: 'Economy', seats: Array(140).fill('available'), price:300 }
     ] 
   },
   { 

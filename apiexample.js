@@ -69,19 +69,47 @@ app.post('/book', async (req, res) => {
     }
 });
 // POST method to add a new movie
-app.post('/movies', async (req, res) => {
-    const newMovie = req.body;
+app.post('/book', async (req, res) => {
+    const { movieId, categoryName, selectedSeat } = req.body;
+    if (!movieId || !categoryName || !selectedSeat) {
+      return res.status(400).json({ error: 'Missing parameters' });
+    }
+  
     const moviesCollection = await connectDatabase();
     if (moviesCollection) {
-        try {
-            await moviesCollection.insertOne(newMovie);
-            res.status(201).json({ message: 'Movie added successfully', movie: newMovie });
-        } catch (error) {
-            console.error('Error adding movie:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+      try {
+        const movie = await moviesCollection.findOne({ id: movieId });
+        if (!movie) {
+          return res.status(404).json({ error: 'Movie not found' });
         }
+        
+        const category = movie.seatCategories.find(cat => cat.name === categoryName);
+        if (!category) {
+          return res.status(404).json({ error: 'Category not found' });
+        }
+        
+        if (category.seats[selectedSeat].status !== 'available') {
+          return res.status(400).json({ error: `Seat ${selectedSeat} in category ${categoryName} is already booked` });
+        }
+        
+        // Calculate the total price based on the selected seat's category
+        const totalPrice = category.seats[selectedSeat].price;
+        
+        category.seats[selectedSeat].status = 'booked';
+        
+        await moviesCollection.updateOne(
+          { id: movieId, 'seatCategories.name': categoryName },
+          { $set: { 'seatCategories.$.seats': category.seats } }
+        );
+  
+        res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}. Total price: $${totalPrice}` });
+      } catch (error) {
+        console.error('Error booking ticket:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     }
-});
+  });
+  
 
 // PUT or PATCH method to update an existing movie
 app.put('/movies/:id', async (req, res) => {
