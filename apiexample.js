@@ -90,7 +90,7 @@ app.post('/book', async (req, res) => {
         
         if (category.seats[selectedSeat].status !== 'available') {
           return res.status(400).json({ error: `Seat ${selectedSeat} in category ${categoryName} is already booked` });
-        }
+        } 
         
         // Calculate the total price based on the selected seat's category
         const totalPrice = category.seats[selectedSeat].price;
