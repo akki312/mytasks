@@ -74,6 +74,7 @@ app.post('/book', async (req, res) => {
     if (!movieId || !categoryName || !selectedSeat) {
       return res.status(400).json({ error: 'Missing parameters' });
     }
+    else{
   
     const moviesCollection = await connectDatabase();
     if (moviesCollection) {
@@ -108,6 +109,7 @@ app.post('/book', async (req, res) => {
         console.error('Error booking ticket:', error);
         res.status(500).json({ error: 'Internal Server Error' });
       }
+    }
     }
   });
   
