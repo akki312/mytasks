@@ -82,9 +82,10 @@ app.post('/book', async (req, res) => {
         if (!movie) {
           return res.status(404).json({ error: 'Movie not found' });
         }
-        
+    
+        else{
         const category = movie.seatCategories.find(cat => cat.name === categoryName);
-        if (!category) {
+        if (!category) 
           return res.status(404).json({ error: 'Category not found' });
         }
         
