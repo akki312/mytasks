@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const express = require('express');
 
 const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
 const dbName = 'movieTickets';
@@ -13,6 +14,85 @@ async function connectDatabase() {
     console.error('Error connecting to the database:', error);
   }
 }
+app.post('/book', async (req, res) => {
+  const { movieId, categoryName, selectedSeat, couponCode } = req.body;
+  // Call the bookTicket function with the provided parameters
+  await bookTicket(movieId, categoryName, selectedSeat, couponCode);
+  res.send('Ticket booking request processed'); // Send a response to the client
+});
+
+app.get('/movies', async (req, res) => {
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+      try {
+          const movies = await moviesCollection.find({}).toArray();
+          res.json(movies);
+      } catch (error) {
+          console.error('Error fetching movies from database:', error);
+          res.status(500).json({ error: 'Internal Server Error' });
+      }
+  }
+});
+
+app.post('/movies', async (req, res) => {
+ const { movieId, categoryName, selectedSeat } = req.body;
+ if (!movieId || !categoryName || !selectedSeat) {
+  return res.status(400).json({ error: 'missing parameters' });
+ }
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const movie = await moviesCollection.findOne({ id: movieId});
+      if (!movie) {
+        return res.status(400).json({ error: 'movie not found' });
+      }
+      else {
+        const category = movie.seatCategories.find(cat => cat.name === categoryName);
+        if (!category) {
+          return res.status(404).json({ error: 'category not found'});
+        }
+
+        if (category.seats[selectedSeat] !== 'available seats') {
+          return res.status(400).json({ eroor: `seat ${selectedSeat} in category ${categoryName} is already booked` });
+        }
+
+        category.seats[selectedSeat] = 'booked';
+         await moviesCollection.updateOne(
+          { id: movieId, 'seatcategories.name': categoryName },
+          { $set: { 'seat categories.$.seats': category.seats} }
+         );
+
+      }
+      res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}` });
+    } catch (error) {
+        console.error('Error booking ticket:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
+app.put('/movies/:id', async (req, res) => {
+  const movieId = req.params.id;
+  const updatedMovieData = req.body;
+  const moviesCollection = await connectDatabase();
+  if (moviesCollection) {
+    try {
+      const result = await moviescolleciton.updateOne(
+        { id: parseInt(movieId) },
+        { $set: updatedMovieData }
+      );
+      if (result.modifiedcount === 0) {
+        return res.status(404).json({ error: 'movie not found' });
+      }
+      res.json({ message: 'movie updated successfully', movieId: movieId});
+    } catch (error) {
+      console.error('error updating movie:', error);
+      res.status(500).json({ error: 'internal server error' });
+
+    }
+  }
+});
+
 
 const moviesData = [
   { 
@@ -171,3 +251,6 @@ async function runExample() {
 }
 
 runExample();
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
