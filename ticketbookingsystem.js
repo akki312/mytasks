@@ -122,8 +122,11 @@ async function bookTicket(movieId, categoryName, selectedSeat, couponCode) {
       if (couponCode === 'HALFOFF') {
         totalPrice /= 2; // Apply 50% discount
       } else if (couponCode === 'FREEMOVIE') {
-        // Apply logic for a free movie coupon
-        // Adjust totalPrice or add a flag for a free ticket
+       if (couponCode === 'partial'){
+        totalPrice /= 4;
+       } else if (couponCode === '20%amount deducted'){
+        
+       }
       }
 
       category.seats[selectedSeat] = 'booked';
