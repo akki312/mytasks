@@ -97,7 +97,7 @@ async function displayMovies() {
 }
 
 
-async function bookTicket(movieId, categoryName, selectedSeat) {
+async function bookTicket(movieId, categoryName, selectedSeat, couponCode) {
   const moviesCollection = await connectDatabase();
   if (moviesCollection) {
     try {
@@ -115,12 +115,23 @@ async function bookTicket(movieId, categoryName, selectedSeat) {
         console.log(`Seat ${selectedSeat} in category ${categoryName} is already booked`);
         return;
       }
+
+      let totalPrice = category.seats[selectedSeat].price; // Initialize total price with standard price
+
+      // Apply coupon code logic
+      if (couponCode === 'HALFOFF') {
+        totalPrice /= 2; // Apply 50% discount
+      } else if (couponCode === 'FREEMOVIE') {
+        // Apply logic for a free movie coupon
+        // Adjust totalPrice or add a flag for a free ticket
+      }
+
       category.seats[selectedSeat] = 'booked';
       await moviesCollection.updateOne(
         { id: movieId, 'seatCategories.name': categoryName },
         { $set: { 'seatCategories.$.seats': category.seats } }
       );
-      console.log(`Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}`);
+      console.log(`Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}. Total price: $${totalPrice}`);
     } catch (error) {
       console.error('Error booking ticket:', error);
     }
@@ -131,7 +142,7 @@ async function bookTicket(movieId, categoryName, selectedSeat) {
 async function runExample() {
   await initializeMoviesCollection();
   await displayMovies();
-  await bookTicket(1, 'VIP', 10); 
+  await bookTicket(1, 'VIP', 10, 'HALFOFF'); 
   await bookTicket(1, 'Standard', 11);
   await bookTicket(1, 'Economy', 12);
   await displayMovies();

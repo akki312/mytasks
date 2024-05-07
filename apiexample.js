@@ -44,6 +44,7 @@ app.post('/book', async (req, res) => {
             if (!movie) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
+            else { 
 
             const category = movie.seatCategories.find(cat => cat.name === categoryName);
             if (!category) {
@@ -60,13 +61,14 @@ app.post('/book', async (req, res) => {
                 { id: movieId, 'seatCategories.name': categoryName },
                 { $set: { 'seatCategories.$.seats': category.seats } }
             );
-
+        }
             res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}` });
         } catch (error) {
             console.error('Error booking ticket:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
 });
 // POST method to add a new movie
 app.post('/book', async (req, res) => {
@@ -128,6 +130,7 @@ app.put('/movies/:id', async (req, res) => {
             if (result.modifiedCount === 0) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
+            else {}
             res.json({ message: 'Movie updated successfully', movieId: movieId });
         } catch (error) {
             console.error('Error updating movie:', error);
