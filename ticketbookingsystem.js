@@ -93,6 +93,24 @@ app.put('/movies/:id', async (req, res) => {
   }
 });
 
+app.get('/movies/:id', async (req, res) => {
+  const movieid = req.params.id;
+  const moviescolleciton = await connectDatabase();
+  if (moviescolleciton) {
+    try {
+      const movie = await moviescollection.findOne({ id: parseInt(movieid) });
+      if (!movie) {
+        return res.status(404).json({ error: 'movie not found' });
+      }
+      res.json(movie);
+    } catch (eroor) {
+      console.error('error fecthing movie form databse:', error);
+      res.status(500).json({ error: 'internal server error' });
+
+    }
+  }
+});
+
 
 const moviesData = [
   { 
