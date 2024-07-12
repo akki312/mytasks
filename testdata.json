@@ -1,0 +1,19 @@
+{
+    "name": "akshith",
+    "age": 24,
+    "isEmployed": true,
+  
+    "phoneNumbers": [
+      {
+        "type": "home",
+        "number": "8008133369"
+      },
+      {
+        "type": "work",
+        "number": "6301047150"
+      }
+    ],
+    "email": "akshithsistla@gmail.com",
+    "skills": ["JavaScript", "Node.js", "React"]
+  }
+  

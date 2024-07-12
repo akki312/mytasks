@@ -1,0 +1,7 @@
+[
+    { "category": "backend", "employees": 6 },
+    { "category": "frontend", "employees": 6 },
+    { "category": "appdevelopment", "employees": 5 },
+    { "category": "testing", "employees": 5 },
+    { "category": "hr", "employees": 3 }
+]

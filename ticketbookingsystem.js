@@ -169,6 +169,10 @@ async function runExample() {
   await bookTicket(5, 'VIP', 5);
   await bookTicket(5, 'Standard', 1);
   await displayMovies();
-}
+} 
 
-runExample();
+// runExample();
+
+bookTicket(5, 'VIP', 3)
+displayMovies();
+

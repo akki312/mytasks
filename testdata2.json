@@ -1,0 +1,9 @@
+[
+    { "id": 1, "category": "A", "employees": 5 },
+    { "id": 2, "category": "B", "employees": 10 },
+    { "id": 3, "category": "A", "employees": 15 },
+    { "id": 4, "category": "C", "employees": 7 },
+    { "id": 5, "category": "B", "employees": 3 },
+    { "id": 6, "category": "C", "employees": 8 }
+  ]
+  

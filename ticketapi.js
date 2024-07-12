@@ -1,196 +1,209 @@
-const express = require('express');
 const { MongoClient } = require('mongodb');
+const express = require('express');
+
 
 const app = express();
+
 const uri = 'mongodb+srv://akshithsistla:ccipnWsoxp5NQ0nm@cluster0.iljkeyx.mongodb.net/';
 const dbName = 'movieTickets';
+const axios = require('axios');
 
-app.use(express.json());
+// Define the base URL of your API
+const baseURL = 'http://localhost:3000'; // Adjust the URL based on your API's actual URL
+
+// Function to retrieve all books from the API
+async function getAllBooks() {
+    try {
+        const response = await axios.get(`${baseURL}/books`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching books:', error.message);
+        return null;
+    }
+}
+
+// Function to add a new book using the API
+async function addBook(bookData) {
+    try {
+        const response = await axios.post(`${baseURL}/books`, bookData);
+        console.log('Book added successfully:', response.data);
+    } catch (error) {
+        console.error('Error adding book:', error.message);
+    }
+}
+
+// Example usage
+async function main() {
+    // Fetch all books
+    const books = await getAllBooks();
+    console.log('All Books:', books);
+
+    // Add a new book
+    const newBook = {
+        title: 'New Book',
+        author: 'John Doe',
+        category: 'Fiction'
+    };
+    await addBook(newBook);
+}
+
+// Run the main function
+main();
+
 
 async function connectDatabase() {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     try {
         await client.connect();
         const db = client.db(dbName);
-        return db.collection('movies');
+        return db.collection('books');
     } catch (error) {
         console.error('Error connecting to the database:', error);
     }
 }
 
-// Endpoint to display available movies and seats
-app.get('/movies', async (req, res) => {
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
+app.get('/books', async (req, res) => {
+    const booksCollection = await connectDatabase();
+    if (booksCollection) {
         try {
-            const movies = await moviesCollection.find({}).toArray();
-            res.json(movies);
+            const books = await booksCollection.find({}).toArray();
+            res.json(books);
         } catch (error) {
-            console.error('Error fetching movies from database:', error);
+            console.error('Error fetching books from database:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 });
-app.post('/book', async (req, res) => {
-    const { movieId, categoryName, selectedSeat } = req.body;
-    if (!movieId || !categoryName || !selectedSeat) {
-        return res.status(400).json({ error: 'Missing parameters' });
-    }
 
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
+async function initializeBooksCollection(booksData) {
+    const booksCollection = await connectDatabase();
+    if (booksCollection) {
         try {
-            const movie = await moviesCollection.findOne({ id: movieId });
-            if (!movie) {
-                return res.status(404).json({ error: 'Movie not found' });
-            }
-            else { 
+            await booksCollection.deleteMany({});
+            await booksCollection.insertMany(booksData);
+            console.log('Books collection initialized');
+        } catch (error) {
+            console.error('Error initializing books collection:', error);
+        }
+    }
+}
 
-            const category = movie.seatCategories.find(cat => cat.name === categoryName);
+async function displayBooks() {
+    const booksCollection = await connectDatabase();
+    if (booksCollection) {
+        try {
+            const books = await booksCollection.find({}).toArray();
+            console.log('Available Books:');
+            books.forEach(book => {
+                console.log(`${book.id}. ${book.title}:`);
+                book.bookCollection.forEach(category => {
+                    console.log(`- ${category.category} (${category.available} available)`);
+                });
+            });
+        } catch (error) {
+            console.error('Error fetching books from database:', error);
+        }
+    }
+}
+
+async function bookTicket(bookId, categoryName, selectedSeat, couponCode) {
+    const booksCollection = await connectDatabase();
+    if (booksCollection) {
+        try {
+            const book = await booksCollection.findOne({ id: bookId });
+            if (!book) {
+                console.log('Book not found');
+                return;
+            }
+            const category = book.bookCollection.find(cat => cat.category === categoryName);
             if (!category) {
-                return res.status(404).json({ error: 'Category not found' });
+                console.log('Category not found');
+                return;
+            }
+            if (category.seats[selectedSeat] !== 'available') {
+                console.log(`Seat ${selectedSeat} in category ${categoryName} is already booked`);
+                return;
             }
 
-            if (category.seats[selectedSeat] !== 'available') {
-                return res.status(400).json({ error: `Seat ${selectedSeat} in category ${categoryName} is already booked` });
-            }
+            let totalPrice = category.price; // Initialize total price with standard price
+
+          
+            // Update takenDate
+            const takenDate = new Date();
 
             category.seats[selectedSeat] = 'booked';
-
-            await moviesCollection.updateOne(
-                { id: movieId, 'seatCategories.name': categoryName },
-                { $set: { 'seatCategories.$.seats': category.seats } }
+            category.takenDate = takenDate;
+            await booksCollection.updateOne(
+                { id: bookId, 'bookCollection.category': categoryName },
+                { $set: { 'bookCollection.$.seats': category.seats, 'bookCollection.$.takenDate': takenDate } }
             );
-        }
-            res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}` });
+            console.log(`Successfully booked seat ${selectedSeat} in category ${categoryName} for ${book.title}. Total price: $${totalPrice}`);
         } catch (error) {
             console.error('Error booking ticket:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+}
 
-});
-// POST method to add a new movie
-app.post('/book', async (req, res) => {
-    const { movieId, categoryName, selectedSeat } = req.body;
-    if (!movieId || !categoryName || !selectedSeat) {
-      return res.status(400).json({ error: 'Missing parameters' });
-    }
-    else{
-  
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
-      try {
-        const movie = await moviesCollection.findOne({ id: movieId });
-        if (!movie) {
-          return res.status(404).json({ error: 'Movie not found' });
+async function runExample() {
+    const booksData = [
+        {
+            id: 1,
+            title: 'The Avengers',
+            bookCollection: [
+                { author: 'J.K. Rowling', category: 'VIP', available: 50, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Standard', available: 100, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Economy', available: 150, taken: 0 }
+            ]
+        },
+        {
+            id: 2,
+            title: 'The Shawshank Redemption',
+            bookCollection: [
+                { author: 'J.K. Rowling', category: 'VIP', available: 30, taken: 0, price: 30 },
+                { author: 'J.K. Rowling', category: 'Standard', available: 80, taken: 0, price: 20 },
+                { author: 'J.K. Rowling', category: 'Economy', available: 120, taken: 0, price: 10 }
+            ]
+        },
+        {
+            id: 3,
+            title: 'The Godfather',
+            bookCollection: [
+                { author: 'J.K. Rowling', category: 'VIP', available: 40, taken: 0, price: 400 },
+                { author: 'J.K. Rowling', category: 'Standard', available: 90, taken: 0, price: 200 },
+                { author: 'J.K. Rowling', category: 'Economy', available: 140, taken: 0, price: 300 }
+            ]
+        },
+        {
+            id: 4,
+            title: 'Something',
+            bookCollection: [
+                { author: 'J.K. Rowling', category: 'VIP', available: 40, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Standard', available: 90, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Economy', available: 140, taken: 0 }
+            ]
+        },
+        {
+            id: 5,
+            title: 'That Thing',
+            bookCollection: [
+                { author: 'J.K. Rowling', category: 'VIP', available: 40, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Standard', available: 90, taken: 0 },
+                { author: 'J.K. Rowling', category: 'Economy', available: 140, taken: 0 }
+            ]
         }
-    
-        else{
-        const category = movie.seatCategories.find(cat => cat.name === categoryName);
-        if (!category) 
-          return res.status(404).json({ error: 'Category not found' });
-        }
-        
-        if (category.seats[selectedSeat].status !== 'available') {
-          return res.status(400).json({ error: `Seat ${selectedSeat} in category ${categoryName} is already booked` });
-        }
-        
-        // Calculate the total price based on the selected seat's category
-        const totalPrice = category.seats[selectedSeat].price;
-        
-        category.seats[selectedSeat].status = 'booked';
-        
-        await moviesCollection.updateOne(
-          { id: movieId, 'seatCategories.name': categoryName },
-          { $set: { 'seatCategories.$.seats': category.seats } }
-        );
-  
-        res.json({ message: `Successfully booked seat ${selectedSeat} in category ${categoryName} for ${movie.title}. Total price: $${totalPrice}` });
-      } catch (error) {
-        console.error('Error booking ticket:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      }
-    }
-    }
-  });
-  
+    ];
 
-// PUT or PATCH method to update an existing movie
-app.put('/movies/:id', async (req, res) => {
-    const movieId = req.params.id;
-    const updatedMovieData = req.body;
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
-        try {
-            const result = await moviesCollection.updateOne(
-                { id: parseInt(movieId) },
-                { $set: updatedMovieData }
-            );
-            if (result.modifiedCount === 0) {
-                return res.status(404).json({ error: 'Movie not found' });
-            }
-            else {}
-            res.json({ message: 'Movie updated successfully', movieId: movieId });
-        } catch (error) {
-            console.error('Error updating movie:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }   
-});
+    await initializeBooksCollection(booksData);
+    await displayBooks();
+    await bookTicket(1, 'VIP', 10, 'HALFOFF');
+    await bookTicket(1, 'Standard', 11);
+    await bookTicket(1, 'Economy', 12);
+}
 
+runExample();
 
-// GET method to retrieve a specific movie by ID
-app.get('/movies/:id', async (req, res) => {
-    const movieId = req.params.id;
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
-        try {
-            const movie = await moviesCollection.findOne({ id: parseInt(movieId) });
-            if (!movie) {
-                return res.status(404).json({ error: 'Movie not found' });
-            }
-            res.json(movie);
-        } catch (error) {
-            console.error('Error fetching movie from database:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }
-});
-app.post('/movies', async (req, res) => {
-    const newMovie = req.body;
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
-        try {
-            await moviesCollection.insertOne(newMovie);
-            res.status(201).json({ message: 'Movie created successfully' });
-        } catch (error) {
-            console.error('Error creating movie:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }
-});
-app.delete('/movies/:id', async (req, res) => {
-    const movieId = req.params.id;
-    const moviesCollection = await connectDatabase();
-    if (moviesCollection) {
-        try {
-            const result = await moviesCollection.deleteOne({ id: parseInt(movieId) });
-            if (result.deletedCount === 0) {
-                return res.status(404).json({ error: 'Movie not found' });
-            }
-            res.json({ message: 'Movie deleted successfully' });
-        } catch (error) {
-            console.error('Error deleting movie:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    }
-});
-app.get('/', (req, res) => {
-    res.send('Welcome to the Movie Ticket Booking API');
-});
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+// Start the Express.js server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
